@@ -19,7 +19,7 @@ The main scoring metric used was **ROC-AUC**.
 
 All the code until the modelling (EDA, Data prep, Feature Engineering) was done by me.
 
-In this 1st iteration I have tested the following things:
+In the 1st iteration I have tested the following things:
 * Different features: some with binned nummerical variables, some with Normalizing transformation (i.e.: Box-Cox)
 * Different resampling techniques in order to deal with the imabalanced label: Undersampling, Oversampling, SMOTE.
 * Different models for classification: Naive-Bayes, Logistic Regression, SVC, Random Forest, XGBoost
@@ -29,6 +29,23 @@ In this 1st iteration I have tested the following things:
 There was not a clear winner in neither the resampling and modelling techniques. Oversampling with Random Forest was marginally better so that is the one thas has been finally used.
 
 Although the final training AUC was 0.86, the final testing AUC was just 0.79. As a conclusion, the model seems to be overfitting and this issue should be addressed in the following iterations. Age was the most important feature.
+
+In the 2nd iteration, I tried to improve on the score from the 1st iteration using feature engineering techniques. I tested the following approaches:
+* Recursive Feature Elimination (RFE) with Random Forest
+* Principal Component Analysis (PCA)
+* The Lasso Regression
+
+All of these techniques were used within the same pipeline as the 1st iteration:
+* Standard Scaler
+* Oversampling
+* Random Forest model
+* I also used the same transformed dataset from the 1st iteration in order to get comparable results.
+
+The goal of these techniques is to extract the important features and drop the irrelevant ones, in order to improve performance.
+
+The best technique was RFE. In my opinion PCA didn't work so well because there is not much multi-collinearity between features, and Lasso didn't work so well because there is not much linear correlation between the features and the label.
+
+With the RFE + RF approach, I was able to drop 4 of the 15 features without loss of performance, having 11 features instead of the original 15. After fine tuning the hyperparameters via RandomizadSearchCV, I trained the model with the entire Train set and made predictions on the Test set. The improvement over the 1st iteration is negligible, so the model is still overfitting. However, it is important to note that with RFE we reached the same performance using 11 features instead of 15 (27% reduction). This might not be such an important thing here as there are only 10000 samples. But a simpler model would be easier to scale and consumes less time and computing power.
 
 
 ## Aknowledgements
